@@ -10,7 +10,8 @@ exports.getAllProducts =
         async (req, res) => {
             const snapshot = await firestone
                 .collection('products')
-                .get()
-            res.send(snapshot.docs.map(doc => doc.data()))
+                .get();
+            const parsed = snapshot.docs.map(doc => doc.data());
+            res.send({ data: parsed });
         }
     );
