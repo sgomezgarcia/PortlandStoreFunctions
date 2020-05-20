@@ -15,3 +15,14 @@ exports.getAllProducts =
             res.send({ data: parsed });
         }
     );
+
+exports.getAllCategories = 
+        functions.https.onRequest(
+            async (req, res) => {
+                const snapshot = await firestone
+                    .collection('categories')
+                    .get();
+                const parsed = snapshot.docs.map(doc => doc.data());
+                res.send({ data: parsed });
+            }
+        )
