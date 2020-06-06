@@ -32,18 +32,22 @@ exports.getProductsByUserId = functions.https.onCall(async (data, context) => {
             .collection('orders')
             .get();
     const parsed = snapshot.docs.map(doc => doc.data());
+    const filtered = parsed.filter((item) => item.userId === data.userId);
     
-    return ({ data: parsed  });
+    return ({ data: filtered  });
     
 });
 
-// exports.getProductsByUserId =
-//     functions.https.onRequest(
-//         async (req, res) => {
-//             // const collectionRef = firestore.collection('orders')
-
-//             // const snapshot = await collectionRef.where('userId' === data.userId);
-//             // const parsed = snapshot.docs.map(doc => doc.data());
-//             res.send({ data: req  });
-//         }
-//     );
+exports.favoriteProducts = functions.https.onCall(async (data, context) => {
+    db.collection("favoriteProducts").add({
+        userId: data.userId,
+        products: data.products
+    })
+    .then(() => {
+        console.warn('yes');
+        return 1;
+    })
+    .catch((error) => {
+        console.warn('error');
+    })
+});
