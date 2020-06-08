@@ -39,15 +39,19 @@ exports.getProductsByUserId = functions.https.onCall(async (data, context) => {
 });
 
 exports.favoriteProducts = functions.https.onCall(async (data, context) => {
-    db.collection("favoriteProducts").add({
-        userId: data.userId,
-        products: data.products
-    })
-    .then(() => {
-        console.warn('yes');
-        return 1;
-    })
-    .catch((error) => {
-        console.warn('error');
-    })
+    const fav = data.favoriteProducts;
+    const addDoc = firestore.collection('favoriteProducts').add(fav).then(ref => {
+        console.log('Added document with ID: ', ref.id);
+        return({ data: 123 });
+      });
+});
+
+exports.getFavoritesByUser = functions.https.onCall(async (data, context) => {
+    const userId = data.userId;
+    const snapshot = await firestore
+        .collection('favoriteProducts')
+        .get();
+    const parsed = snapshot.docs.map(doc => doc.data());
+    const filtered = parsed.filter((item) => item.userId === userId);
+    return ({ data: filtered });
 });
