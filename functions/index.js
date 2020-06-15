@@ -42,7 +42,7 @@ exports.favoriteProducts = functions.https.onCall(async (data, context) => {
     const fav = data.favoriteProducts;
     const addDoc = firestore.collection('favoriteProducts').add(fav).then(ref => {
         console.log('Added document with ID: ', ref.id);
-        return({ data: 123 });
+        return({ data: ref });
       });
 });
 
@@ -54,4 +54,12 @@ exports.getFavoritesByUser = functions.https.onCall(async (data, context) => {
     const parsed = snapshot.docs.map(doc => doc.data());
     const filtered = parsed.filter((item) => item.userId === userId);
     return ({ data: filtered });
+});
+
+exports.createOrders = functions.https.onCall(async (data, context) => {
+    const order = data.createOrders;
+    const addDoc = firestore.collection('orders').add(order).then(ref => {
+        console.log('Added document with ID: ', ref.id);
+        return({ data: ref });
+      });
 });
